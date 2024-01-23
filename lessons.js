@@ -110,7 +110,7 @@ let webstore = new Vue({
     },
 
     fetchLessons: function() {
-      fetch('http://localhost:3000/lessons')
+      fetch('http://localhost:3000/collection/lessons')
         .then(response => response.json())
         .then(data => {
           this.lessons = data; // Replace the empty array with data fetched from server
