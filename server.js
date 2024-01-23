@@ -22,13 +22,24 @@ MongoClient.connect('mongodb+srv://krishKal:lionking@cluster0.hykpngx.mongodb.ne
 });
 
 // GET /lessons endpoint
-app.get('/lessons', (req, res) => {
-    db.collection('lessons').find({}).toArray((err, results) => {
-        if (err) throw err;
-        res.json(results);
-    });
-});
+// app.get('/lessons', (req, res) => {
+//     db.collection('lessons').find({}).toArray((err, results) => {
+//         if (err) throw err;
+//         res.json(results);
+//     });
+// });
 
+app.param('collectionName', (req, res, next, collectionName) =>{
+    req.collection = db.collection(collectionName)
+    return next()
+})
+
+app.get('/collection/:collectionName', (req,res,next) =>{
+    req.collection.find({}).toArray((e, results) => {
+        if (e) return next(e)
+        res.send(results)
+    })
+});
 // Start the server
 app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');
