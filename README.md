@@ -1,2 +1,14 @@
 # CW2
 CST3145 Coursework2
+
+# Coursework1
+
+# website link where the app can directly run in
+
+https://krishkalvani.github.io/Coursework1/afterSchool.html
+
+
+# link for the repository
+https://github.com/KrishKalvani/Coursework1
+
+https://github.com/KrishKalvani/Coursework1.git
