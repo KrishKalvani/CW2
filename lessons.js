@@ -10,101 +10,7 @@ let webstore = new Vue({
       phone: null
 
     },
-    lessons: [ //lessons array containing 10 lesson objects
-      {
-        id: 1001,
-        image: "images/MathIcon.jpg",
-        subject: "Math",
-        location: "Nahda",
-        price: 100,
-        spaces: 5,
-        cartItemCount: 0 //this is there for every lesson object because I want to track whether this specific lesson is there in the cart
-      },
-      {
-        id: 1002,
-        image: "images/MicroBio.png",
-        subject: "Microbiology",
-        location: "Qouz",
-        price: 90,
-        spaces: 5,
-        cartItemCount: 0 //its set to 0 because initially there is nothing in the cart at first
-      },
-      {
-        id: 1003,
-        image: "images/organicChem.png",
-        subject: "Organic Chemistry",
-        location: "Barsha",
-        price: 150,
-        spaces: 5,
-        cartItemCount: 0
-      },
-      {
-        id: 1004,
-        image: "images/physIcon.png",
-        subject: "Physics",
-        location: "Dubai Museum",
-        price: 100,
-        spaces: 5,
-        cartItemCount: 0
-      },
-      {
-        id: 1005,
-        image: "images/advancedMath.png",
-        subject: "Advanced Math",
-        location: "Knowledge Village",
-        price: 120,
-        spaces: 5,
-        cartItemCount: 0
-      },
-      {
-        id: 1006,
-        image: "images/advancedEnglish.jpg",
-        subject: "Advanced English",
-        location: "Buhairah",
-        price: 80,
-        spaces: 5,
-        cartItemCount: 0
-      },
-      {
-        id: 1007,
-        image: "images/musicIcon.png",
-        subject: "Music",
-        location: "Dubai Opera",
-        price: 90,
-        spaces: 5,
-        cartItemCount: 0
-      },
-      {
-        id: 1008,
-        image: "images/engIcon.png",
-        subject: "English",
-        location: "City Walk",
-        price: 70,
-        spaces: 5,
-        cartItemCount: 0
-
-      },
-      {
-        id: 1009,
-        image: "images/chemistryIcon.png",
-        subject: "Chemistry",
-        location: "Jumeriah",
-        price: 100,
-        spaces: 5,
-        cartItemCount: 0
-      },
-      {
-        id: 1010,
-        image: "images/bioIcon.png",
-        subject: "Biology",
-        location: "Rolla",
-        price: 100,
-        spaces: 5,
-        cartItemCount: 0
-      },
-
-
-    ],
+    lessons: [], //lessons array containing 10 lesson objects
     cart: [], //this is the cart array that stores the IDs of the lessons and will be used to display the lessons in the cart page dynamically
     sortOrder: 'ascending',//this will change to descending and back to ascending depending on the button clicked in the html page
   },
@@ -201,10 +107,23 @@ let webstore = new Vue({
       }else{
       alert('Order Submitted. Thank you!');
       }
-    }
+    },
+
+    fetchLessons: function() {
+      fetch('http://localhost:3000/lessons')
+        .then(response => response.json())
+        .then(data => {
+          this.lessons = data; // Replace the empty array with data fetched from server
+        })
+        .catch(error => console.error('Error fetching lessons:', error));
+    },
 
 
 
+  },
+
+  mounted() {
+    this.fetchLessons(); // Fetch lessons when the component is mounted
   },
 
   computed: {
