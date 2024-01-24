@@ -21,6 +21,8 @@ MongoClient.connect('mongodb+srv://krishKal:lionking@cluster0.hykpngx.mongodb.ne
     db = client.db('afterSchool');
 });
 
+// const lessonsCollection = db.collection('lessons')
+
 // GET /lessons endpoint
 // app.get('/lessons', (req, res) => {
 //     db.collection('lessons').find({}).toArray((err, results) => {
@@ -28,6 +30,10 @@ MongoClient.connect('mongodb+srv://krishKal:lionking@cluster0.hykpngx.mongodb.ne
 //         res.json(results);
 //     });
 // });
+
+app.use('/static', express.static('public')) //displays in the html
+app.use('/images', express.static('images'))//displays the images
+
 
 app.param('collectionName', (req, res, next, collectionName) =>{
     req.collection = db.collection(collectionName)
@@ -40,6 +46,13 @@ app.get('/collection/:collectionName', (req,res,next) =>{
         res.send(results)
     })
 });
+
+// app.get('/lessons', (req,res,next) =>{
+//     lessonsCollection.find({}).toArray((e, results) => {
+//         if (e) return next(e)
+//         res.send(results)
+//     })
+// });
 // Start the server
 app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');
