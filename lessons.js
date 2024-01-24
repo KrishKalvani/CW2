@@ -15,6 +15,17 @@ let webstore = new Vue({
     sortOrder: 'ascending',//this will change to descending and back to ascending depending on the button clicked in the html page
   },
   methods: {
+
+    fetchLessons: function() {
+      fetch('http://localhost:3000/collection/lessons')
+        .then(response => response.json())
+        .then(data => {
+          this.lessons = data; // Replace the empty array with data fetched from server
+        })
+        .catch(error => console.error('Error fetching lessons:', error));
+    },
+
+
     addToCart: function (lesson) { //this function adds the IDs of each lesson thats added in the cart
       if (lesson.spaces > lesson.cartItemCount) { //if the spaces left of the lesson is more that whats in the cart
         lesson.cartItemCount++ //then we can add it (increment the cartItemCount value)
@@ -108,23 +119,12 @@ let webstore = new Vue({
       alert('Order Submitted. Thank you!');
       }
     },
-
-    fetchLessons: function() {
-      fetch('http://localhost:3000/collection/lessons')
-        .then(response => response.json())
-        .then(data => {
-          this.lessons = data; // Replace the empty array with data fetched from server
-        })
-        .catch(error => console.error('Error fetching lessons:', error));
-    },
-
-
-
+  
   },
 
-  mounted() {
-    this.fetchLessons(); // Fetch lessons when the component is mounted
-  },
+  // mounted() {
+  //   this.fetchLessons(); // Fetch lessons when the component is mounted
+  // },
 
   computed: {
     cartItems: function () { //this is a function that is making an array - cartItems of lesson objects
@@ -166,23 +166,23 @@ let webstore = new Vue({
     //     return this.lessons.filter((lesson)=>lesson.subject.toLowerCase().includes(this.searchValue.trim().toLowerCase()))
     //   }//we filter the lesson for each lesson if the lessons subject includes the value we searched, then return it.
 
-    lessonList(){ // i modified the previouse code to search by location as well
-      if(this.searchValue.trim().length>0){ //if the user searches something
-        return (this.lessons.filter((lesson)=>{// then return the following
-          let lowerCaseSearch= this.searchValue.trim().toLowerCase(); //this stores all the search values in lowerCase
-          let subjectSearch= lesson.subject.toLowerCase().includes(lowerCaseSearch);//searches by subject, we lowerCase the subject so we can get
-          //results for searching a small letter, we do the lowerCasing during the search (in the includes) so that we can search big letters, we just want to make it
-          //case insensitive
-          let locationSearch= lesson.location.toLowerCase().includes(lowerCaseSearch);
-          return subjectSearch||locationSearch;
+    // lessonList(){ // i modified the previouse code to search by location as well
+    //   if(this.searchValue.trim().length>0){ //if the user searches something
+    //     return (this.lessons.filter((lesson)=>{// then return the following
+    //       let lowerCaseSearch= this.searchValue.trim().toLowerCase(); //this stores all the search values in lowerCase
+    //       let subjectSearch= lesson.subject.toLowerCase().includes(lowerCaseSearch);//searches by subject, we lowerCase the subject so we can get
+    //       //results for searching a small letter, we do the lowerCasing during the search (in the includes) so that we can search big letters, we just want to make it
+    //       //case insensitive
+    //       let locationSearch= lesson.location.toLowerCase().includes(lowerCaseSearch);
+    //       return subjectSearch||locationSearch;
 
-        }));
+    //     }));
         
         
-      }
-      return this.lessons;//this displays all the lessons at default when nothing is searched
+    //   }
+    //   return this.lessons;//this displays all the lessons at default when nothing is searched
 
-    }
+    // }
     //reference for the searching: https://www.youtube.com/watch?v=0TMy-5srdlA&list=LL&index=1&t=818s
 
 
