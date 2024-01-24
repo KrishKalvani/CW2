@@ -1,0 +1,274 @@
+body{ /*body css*/
+    margin: 0;
+    background-color:#ff9900 ;
+    /* background: linear-gradient(to bottom, #ff9900, #ff66cc); */
+}
+#navigation{ /*navigation bar*/
+   
+    height:70px;
+    width:100%;
+}
+#searchInput{ /*search bar in the nav bar*/
+    position: absolute;
+    margin-top: 15px;
+    margin-left: 35%;
+    width: 300px;
+    height: 30px;
+    
+    padding: 5px;
+}
+
+#sortPriceButtons{ /*positioning the sort price button*/
+    position: absolute;
+    margin-left:2%;
+    margin-top: -2%;
+}
+#sortSubButtons{ /*positioning the sort subject button*/
+    position: absolute;
+    margin-top: -2%;
+    margin-left: 28%;
+}
+
+#sortLocationButtons{ /*positioning the sort location button*/
+    position: absolute;
+    margin-top: -2%;
+    margin-left: 51%;
+
+}
+
+#sortSpacesButtons{
+    position: absolute;
+    margin-top: -2%;
+    margin-left: 74%;
+
+}
+
+
+#welcomeText{ /*CSS for the welcome message*/
+    font-size: 50px;
+    margin-left: 3%;
+    text-align: center;
+    color: white;
+    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 2px;
+   
+    
+}
+
+#checkOutHeading{ /*CSS for the checkout heading when we toggle the page*/
+    font-size: 50px;
+    margin-top: 5%;
+    margin-left: 3%;
+    text-align: left;
+    color: white;
+    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 1.5px;
+    margin-left: 45%;
+
+}
+
+#checkoutTable{ /*setting up the table where the carItems are added*/
+    width: 70%;
+  border-collapse: collapse;
+  border-spacing: 10px;
+  margin-top: 20px;
+  text-align: center;
+  margin-left: 15%;
+  background-color: khaki;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/*Checkout table CSS*/
+#checkoutTable th{
+  
+  color: black;
+  font-weight: bold;
+  padding: 10px;
+  border: 1px solid black;
+  background-color: #e1e356;
+  
+}
+#checkoutTable td{
+    border: 1px solid black;
+    font-size: large; 
+}
+
+
+#checkoutTable img{
+    float: left;
+    width:70%;
+  height: 70%;
+  
+}
+
+/*Logo in the nav bar*/
+#logo{
+    height:200px;
+    width: 9%;
+    margin-left:1%;
+    margin-top: -4.5%;
+    
+}
+/* size of the lesson picture */
+#lessonPic{
+    height: 40%;
+    width: 40%;
+    margin-left:-160px;
+    margin-top: 50px;
+    
+}
+
+#lessonContent{ /*CSS for the subject, location, price, spaces and the addtocart button*/
+    margin-left: 50%;
+    margin-top:-40%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+
+#addtocartButton{ /*positioning and designing each addtocart button in each lesson*/
+    margin-left:-83%; 
+    margin-top:-5px;
+    height: 25%;
+    width: 70%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    background-color: #9692f7;
+}
+#disabledAddToCartButton{/*same for the disabled version when its sold out*/
+    margin-left:-83%; 
+    margin-top:-5px;
+    height: 25%;
+    width: 70%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    background-color: #9692f7;
+    margin-bottom: 60px;
+
+}
+
+#checkOutButton{ /*CSS for the checkout button on the top in the nav bar*/
+    position: absolute;
+    margin-top:-18.5%;
+    margin-left: 90%;
+    height: 8%;
+    width: 6%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    background-color: #9692f7;
+}
+
+  #lessonsGrid { /*this sets up the display of the lessons using grid, it arranges it as 5 lessons per row*/
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 20px;
+    justify-content: center;
+  }
+
+  #lessonCard { /*this sets up the border, size, and background color for each lesson*/
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    text-align: center;
+    width: 250px;
+    height: 350px; 
+    background-color: #e6edbe;
+    /* display:flex;
+    flex-direction: column; */
+  }
+
+#footer{ /*footer at the bottom of the page*/
+    position: absolute;
+    /* margin-left: 50%; */
+    background-color: #110d78;
+    color: white;
+    font-size: larger;
+    width: 100%;
+    margin-top: 30%;
+}
+
+#credentialHeading{ /*in the checkout page, we have the main heading to prompt the user to please enter their credentials. CSS for that*/
+    
+    margin-left:8%; 
+    margin-top:10%;
+    font-size: 40px;
+    color: white;
+    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 1px;
+}
+
+#credentialBox{ /*This is the container for the name and phone number credentials*/
+    border: 1px solid black;
+    width:40%;
+    height: 200px;
+    margin-left:5%;
+    background-color: khaki;
+
+}
+#nameCredential{/*this is the CSS for the positioning, font, styling, etc., of the name label inside the credentialBox*/
+    position: absolute;
+    margin-left:0%;
+    margin-top: 4%;
+    font-family: Arial, Helvetica, sans-serif; 
+    font-size: large;
+}
+
+#phoneCredential{/*this is the CSS for the positioning, font, styling, etc., of the phone label inside the credentialBox*/
+    position: absolute;
+    margin-left:18%; 
+    margin-top: 4%;
+    font-family: Arial, Helvetica, sans-serif; 
+    font-size: large;
+}
+
+#BothCredentials{/*I wanted to adjust both the name and phone number credentials at the same time instead of individually so I made this ID for that*/
+    margin-left: 5%;
+    margin-top: 3%;
+}
+
+#orderInfoBox{/*this is the order details box where the name and phone number is autofilled just before we place the order.
+    this is located next to the credentials box*/
+    border: 1px solid black;
+    width:40%;
+    height: 250px;
+    margin-left:55%;
+    margin-top:-15%;
+    background-color: khaki;
+
+}
+
+#orderInfoHeading{ /*in the checkout page, we have the main heading "Order Information" just above the orderInfoBox. CSS for that*/
+    position: absolute;
+    margin-left: 65%;
+    margin-top: -20%;
+    font-size: 40px;
+    color: white;
+    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 1px;
+}
+
+#orderInfoDetails{ /*CSS for the name and phone number label which is to be auto-filled*/
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: large;
+    margin-left:5%;
+    margin-top: 10%;
+}
+
+#PlaceOrderButton{ /*CSS positioning for the place order button after both the credential and orderInfo boxes*/
+    position: absolute;
+    margin-top: -2.5%;
+    margin-left: 82%;
+}
+
+#NoLessonFoundText{
+    position: absolute;
+    margin-left: 39%;
+    margin-top: 10%;
+    font-size: 40px;
+    color: white;
+    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-width: 1px;
+
+}
