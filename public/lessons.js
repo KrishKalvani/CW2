@@ -14,15 +14,18 @@ let webstore = new Vue({
     cart: [], //this is the cart array that stores the IDs of the lessons and will be used to display the lessons in the cart page dynamically
     sortOrder: 'ascending',//this will change to descending and back to ascending depending on the button clicked in the html page
   },
+  created: function() {
+    this.fetchLessons(); //calling the function
+  },
   methods: {
 
-    fetchLessons: function() {
-      fetch('http://localhost:3000/collection/lessons')
-        .then(response => response.json())
-        .then(data => {
-          this.lessons = data; // Replace the empty array with data fetched from server
+    fetchLessons: function() { //makes a get request to the server's /lessons route
+      fetch('http://localhost:3000/lessons')
+        .then(response => response.json()) //when this gets the response from the server, this will take the response and read it as JSON
+        .then(data => { //then we update the lessons array
+          this.lessons = data; //replace the empty lessons array with data fetched from server
         })
-        .catch(error => console.error('Error fetching lessons:', error));
+        .catch(error => console.error('Error fetching lessons:', error)); //error handling
     },
 
 
@@ -122,9 +125,9 @@ let webstore = new Vue({
   
   },
 
-  mounted() {
-    this.fetchLessons(); // Fetch lessons when the component is mounted
-  },
+  // mounted() {
+  //   this.fetchLessons(); // Fetch lessons when the component is mounted
+  // },
 
   computed: {
     cartItems: function () { //this is a function that is making an array - cartItems of lesson objects
