@@ -14,12 +14,12 @@ let webstore = new Vue({
     cart: [], //this is the cart array that stores the IDs of the lessons and will be used to display the lessons in the cart page dynamically
     sortOrder: 'ascending',//this will change to descending and back to ascending depending on the button clicked in the html page
   },
-  created: function() {
+  created: function () {
     this.fetchLessons(); //calling the function
   },
   methods: {
 
-    fetchLessons: function() { //makes a get request to the server's /lessons route
+    fetchLessons: function () { //makes a get request to the server's /lessons route
       fetch('http://localhost:3000/lessons')
         .then(response => response.json()) //when this gets the response from the server, this will take the response and read it as JSON
         .then(data => { //then we update the lessons array
@@ -28,12 +28,12 @@ let webstore = new Vue({
         .catch(error => console.error('Error fetching lessons:', error)); //error handling
     },
 
-    submitOrder: function() {
+    submitOrder: function () {
       if (this.cart.length === 0) { //checks if cart length is 0, if so, then make sure user adds something to the cart
         alert('Please add lessons to your cart to place an order.');
         return; //exit the function if the cart is empty
       }
-  
+
       //make the order data if cart is not empty
       const orderData = { //setting up how the document should be like in MongoDB
         name: this.order.name, //taken from the order vue object.
@@ -50,7 +50,7 @@ let webstore = new Vue({
       };
 
       //the acc stores an object which has the lesson ID and maps that to the corresponding object which contains spaces details.
-  
+
       //send the order data to the server
       fetch('http://localhost:3000/orders', { //sends a post request
         method: 'POST', //specifying http request
@@ -59,16 +59,40 @@ let webstore = new Vue({
         },
         body: JSON.stringify(orderData), //we have to stringify the orderData JS object to send it as HTTP request
       })
-      .then(response => response.json()) //reads the response as json
-      .then(data => { //logs the result to the console
-        console.log('Order submitted:', data);
-        alert('Order Submitted. Thank you!');
-        // Additional handling like clearing the cart
-      })
-      .catch(error => { //error handling
-        console.error('Error submitting order:', error);
-        alert('Error submitting order. Please try again.');
+        .then(response => response.json()) //reads the response as json
+        .then(data => { //logs the result to the console
+          console.log('Order submitted:', data);
+          alert('Order Submitted. Thank you!');
+        })
+        .catch(error => { //error handling
+          console.error('Error submitting order:', error);
+          alert('Error submitting order. Please try again.');
+        });
+
+      //updating the lesson spaces with PUT
+      const spaceUpdates = this.cartItems.map(item => {
+        return {
+          lessonId: item.id,
+          decrement: item.cartItemCount // The number to decrement the spaces by
+        };
       });
+
+      //Now we send a PUT request to update the spaces
+      fetch('http://localhost:3000/lessons/update-spaces', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(spaceUpdates),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Spaces updated:', data);
+        })
+        .catch(error => {
+          console.error('Error updating spaces:', error);
+        });
+
     },
 
 
@@ -100,20 +124,20 @@ let webstore = new Vue({
       });
     },
 
-    sortAlphabetically: function (order){//sorting the subjects, using localeCompare as its used for arrange strings
-        this.sortOrder= order;
-        this.lessons.sort((a,b)=>{
-          if(order==='ascending'){
-            return a.subject.localeCompare(b.subject); //localeCompare compares 2 strings and returns a value that shows their order
-            //if one string (A) is before another string (B), it will return a -ve number and sort in ascending order
-          } else if (order==='descending') { //Similar concept for (B) before (A) i.e., descending order
-            return b.subject.localeCompare(a.subject);
-          }
-          return 0;
-        });
-      },
+    sortAlphabetically: function (order) {//sorting the subjects, using localeCompare as its used for arrange strings
+      this.sortOrder = order;
+      this.lessons.sort((a, b) => {
+        if (order === 'ascending') {
+          return a.subject.localeCompare(b.subject); //localeCompare compares 2 strings and returns a value that shows their order
+          //if one string (A) is before another string (B), it will return a -ve number and sort in ascending order
+        } else if (order === 'descending') { //Similar concept for (B) before (A) i.e., descending order
+          return b.subject.localeCompare(a.subject);
+        }
+        return 0;
+      });
+    },
 
-    
+
 
 
 
@@ -135,10 +159,10 @@ let webstore = new Vue({
       this.lessons.sort((a, b) => { //lets assume a and b are the objects (each lesson) in our lessons array, sort performs the ascending 
         //and descending
         if (order === 'ascending') {//if order is ascedning...
-          return (a.spaces-a.cartItemCount) - (b.spaces-b.cartItemCount);//display the first detected lesson minus the 2nd one but here
+          return (a.spaces - a.cartItemCount) - (b.spaces - b.cartItemCount);//display the first detected lesson minus the 2nd one but here
           //we dynamically check the cartItemCount's value (from each lesson) to sort the spaces
         } else if (order === 'descending') {// similarly for descending but 2nd lesson minus the 1st
-          return (b.spaces-b.cartItemCount)-(a.spaces-a.cartItemCount);
+          return (b.spaces - b.cartItemCount) - (a.spaces - a.cartItemCount);
         }
         return 0; // this will not display any change if theres no ascending or descending detected
       });
@@ -165,7 +189,7 @@ let webstore = new Vue({
     //   alert('Order Submitted. Thank you!');
     //   }
     // },
-  
+
   },
 
   // mounted() {
@@ -223,8 +247,8 @@ let webstore = new Vue({
     //       return subjectSearch||locationSearch;
 
     //     }));
-        
-        
+
+
     //   }
     //   return this.lessons;//this displays all the lessons at default when nothing is searched
 
