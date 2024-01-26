@@ -132,7 +132,7 @@
         </div>
         <br>
         <p style="font-size: small;font-family: Arial, Helvetica, sans-serif; text-align: center; margin-left: 50%;">Make sure to enter the valid form<br>of credentials to place order</p>
-        <button id="PlaceOrderButton" v-on:click="submitForm" :disabled="!credentialsValidation">Place Order</button><!--button disables if the credentialsValidation is not true-->
+        <button id="PlaceOrderButton" v-on:click="submitOrder" :disabled="!credentialsValidation">Place Order</button><!--button disables if the credentialsValidation is not true-->
 
       </div>
 
