@@ -28,6 +28,49 @@ let webstore = new Vue({
         .catch(error => console.error('Error fetching lessons:', error)); //error handling
     },
 
+    submitOrder: function() {
+      if (this.cart.length === 0) { //checks if cart length is 0, if so, then make sure user adds something to the cart
+        alert('Please add lessons to your cart to place an order.');
+        return; //exit the function if the cart is empty
+      }
+  
+      //make the order data if cart is not empty
+      const orderData = { //setting up how the document should be like in MongoDB
+        name: this.order.name, //taken from the order vue object.
+        phoneNumber: this.order.phone,
+        //we take the cartItems array and we will construct the mongoDB cart array
+        cart: this.cartItems.reduce((acc, lesson) => {//accumulator and the current lesson being processed
+          //each item in cart is an object with lesson details
+          if (!acc[lesson.id]) { //checks if the lesson.id (key) is not added
+            acc[lesson.id] = { spaces: 0, lessonDetails: lesson }; //if the condition is true, then set this up
+          }
+          acc[lesson.id].spaces += 1; //counts and increments how many times a particular lesson has been added in the cart.
+          return acc; //goes to the next iteration or returns the final acc when the process is complete.
+        }, {})
+      };
+
+      //the acc stores an object which has the lesson ID and maps that to the corresponding object which contains spaces details.
+  
+      //send the order data to the server
+      fetch('http://localhost:3000/orders', { //sends a post request
+        method: 'POST', //specifying http request
+        headers: { //telling the server that the body of the request is JSON
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData), //we have to stringify the orderData JS object to send it as HTTP request
+      })
+      .then(response => response.json()) //reads the response as json
+      .then(data => { //logs the result to the console
+        console.log('Order submitted:', data);
+        alert('Order Submitted. Thank you!');
+        // Additional handling like clearing the cart
+      })
+      .catch(error => { //error handling
+        console.error('Error submitting order:', error);
+        alert('Error submitting order. Please try again.');
+      });
+    },
+
 
     addToCart: function (lesson) { //this function adds the IDs of each lesson thats added in the cart
       if (lesson.spaces > lesson.cartItemCount) { //if the spaces left of the lesson is more that whats in the cart
@@ -115,13 +158,13 @@ let webstore = new Vue({
       }
     },
 
-    submitForm() {//Triggered in the place order button only if the credentials are valid, it will alert this message
-      if(this.cart.length===0){
-        alert('Please add lessons to your cart to place an order.');
-      }else{
-      alert('Order Submitted. Thank you!');
-      }
-    },
+    // submitForm() {//Triggered in the place order button only if the credentials are valid, it will alert this message
+    //   if(this.cart.length===0){
+    //     alert('Please add lessons to your cart to place an order.');
+    //   }else{
+    //   alert('Order Submitted. Thank you!');
+    //   }
+    // },
   
   },
 
