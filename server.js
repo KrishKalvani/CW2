@@ -1,9 +1,15 @@
 const express = require('express');
 const app = express();
 
+app.use((req, res, next) => { //logger middleware, used for debugging
+    const now = new Date();
+    console.log(`${now.toLocaleString()} - ${req.method} Request to ${req.url}`);
+    next();
+});
+
 app.use(express.json())
 app.set('port', 3000)
-app.use((req,res,next)=>{
+app.use((req,res,next)=>{ //used for the CORS error
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader("Access-Control-Allow-Origin-Credentials", "true");
     res.setHeader("Access-Control-Allow-Origin-Methods", "GET,HEAD,OPTIONS,POST,PUT");
@@ -21,38 +27,22 @@ MongoClient.connect('mongodb+srv://krishKal:lionking@cluster0.hykpngx.mongodb.ne
     db = client.db('afterSchool');
 });
 
-// const lessonsCollection = db.collection('lessons')
 
-// GET /lessons endpoint
-// app.get('/lessons', (req, res) => {
-//     db.collection('lessons').find({}).toArray((err, results) => {
-//         if (err) throw err;
-//         res.json(results);
-//     });
-// });
-
-app.use('/static', express.static('public')) //displays in the html
-app.use('/images', express.static('images'))//displays the images
-
-
-app.param('collectionName', (req, res, next, collectionName) =>{
-    req.collection = db.collection(collectionName)
-    return next()
-})
-
-app.get('/collection/:collectionName', (req,res,next) =>{
-    req.collection.find({}).toArray((e, results) => {
-        if (e) return next(e)
-        res.send(results)
-    })
+//reference for express.static - https://expressjs.com/en/starter/static-files.html
+app.use('/static', express.static('public')) //displays in the html. Middleware thats telling express that any URL that has /static at the end, should look into the public directory.
+app.use('/images', express.static('images'))//displays the images. Similar to the previous line but it tells express to access the images directory.
+app.use('/images', (req, res) => { //error handling, test with postman
+    res.status(404).send('Image not found');
 });
 
-// app.get('/lessons', (req,res,next) =>{
-//     lessonsCollection.find({}).toArray((e, results) => {
-//         if (e) return next(e)
-//         res.send(results)
-//     })
-// });
+//GET /lessons endpoint
+app.get('/lessons', (req, res) => { //defining the route on the server for a get request on /lessons
+    db.collection('lessons').find({}).toArray((err, results) => { //querying the DB for all the documents in the lessons collection
+        if (err) throw err;
+        res.json(results); //send results to client as JSON data
+    });
+});
+
 // Start the server
 app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');
