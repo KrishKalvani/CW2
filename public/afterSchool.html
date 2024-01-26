@@ -4,7 +4,7 @@
   <head>
     <title>After School</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script> <!--this is the CDN link to connect to the vue.js devtools-->
-    <link rel="stylesheet" href="http://localhost:3000/static/afterSchool.css"><!--link for CSS-->
+    <link rel="stylesheet" href="/static/afterSchool.css"><!--link for CSS-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
   </head><!--above is the link for using the font awesome cart icon-->
   <body>
@@ -12,7 +12,7 @@
       <div id="navigation" style="background-color: #110d78; ">
         
        
-        <a href="afterSchool.html"><img id="logo" src="http://localhost:3000/images/cw1logo.png"></a><!--website logo-->
+        <a href="afterSchool.html"><img id="logo" src="/images/cw1logo.png"></a><!--website logo-->
         <p style="position: absolute;margin-top: -110px;margin-left: 40%; color: white; font-family: Arial, Helvetica, sans-serif;">Search:</p>
         <input id="searchInput" v-model="searchValue" type="text" placeholder="Search lessons..."><!--search input, searchVal is tracked here-->
         <!--change made here-->
@@ -141,7 +141,7 @@
     <div id="footer">
       <p style="margin-left: 45%;">Web page made by Krish Kalvani</p>
     </div>
-    <script src="http://localhost:3000/static/lessons.js"></script><!--link to JS file-->
+    <script src="/static/lessons.js"></script><!--link to JS file-->
     <!-- <script src="../CW2/server.js"></script> -->
   </body>
   <!--end of html page-->
