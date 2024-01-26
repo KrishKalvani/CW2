@@ -43,6 +43,23 @@ app.get('/lessons', (req, res) => { //defining the route on the server for a get
     });
 });
 
+//POST /orders endpoint
+app.post('/orders', (req, res) => { //this will extract the orderData (created in lessons.js) from the req.body
+    const orderData = req.body; // Includes name, phoneNumber, and cart
+
+    db.collection('orders').insertOne(orderData, (err, result) => { //insert orderData into orders collection
+        if (err) {
+            console.error(err);
+            res.status(500).send("Error saving the order.");
+            return;
+        }
+        //if successful, status code is 201 and this message is recieved in the console.
+        res.status(201).send({ message: 'Order saved', id: result.insertedId });
+    });
+});
+
+
+
 // Start the server
 app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');
