@@ -58,6 +58,26 @@ app.post('/orders', (req, res) => { //this will extract the orderData (created i
     });
 });
 
+//PUT /lessons/update-spaces endpoint
+app.put('/lessons/update-spaces', (req, res) => {
+    const updates = req.body;
+
+    Promise.all(updates.map(update => {
+        return db.collection('lessons').updateOne(
+            { id: update.lessonId },
+            { $inc: { spaces: -update.decrement } }
+        );
+    }))
+    .then(result => {
+        res.json({ message: 'Spaces updated', result });
+    })
+    .catch(err => {
+        console.error(err);
+        res.status(500).send('Error updating spaces');
+    });
+});
+
+
 
 
 // Start the server
