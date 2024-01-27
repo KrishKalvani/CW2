@@ -27,7 +27,8 @@ let webstore = new Vue({
         })
         .catch(error => console.error('Error fetching lessons:', error)); //error handling
     },
-
+    
+    
     submitOrder: function () {
       if (this.cart.length === 0) { //checks if cart length is 0, if so, then make sure user adds something to the cart
         alert('Please add lessons to your cart to place an order.');
@@ -42,7 +43,7 @@ let webstore = new Vue({
         cart: this.cartItems.reduce((acc, lesson) => {//accumulator and the current lesson being processed
           //each item in cart is an object with lesson details
           if (!acc[lesson.id]) { //checks if the lesson.id (key) is not added
-            acc[lesson.id] = { spaces: 0, lessonDetails: lesson }; //if the condition is true, then set this up
+            acc[lesson.id] = { spaces: 0 }; //if the condition is true, then set this up
           }
           acc[lesson.id].spaces += 1; //counts and increments how many times a particular lesson has been added in the cart.
           return acc; //goes to the next iteration or returns the final acc when the process is complete.
@@ -63,35 +64,37 @@ let webstore = new Vue({
         .then(data => { //logs the result to the console
           console.log('Order submitted:', data);
           alert('Order Submitted. Thank you!');
+          this.cart = []; //this.cart is my cart array
+          // this.cartItemCount = 0;
         })
         .catch(error => { //error handling
           console.error('Error submitting order:', error);
           alert('Error submitting order. Please try again.');
         });
 
-      //updating the lesson spaces with PUT
-      const spaceUpdates = this.cartItems.map(item => {
-        return {
-          lessonId: item.id,
-          decrement: item.cartItemCount // The number to decrement the spaces by
-        };
-      });
+      // //updating the lesson spaces with PUT
+      // const spaceUpdates = this.cartItems.map(item => {
+      //   return {
+      //     lessonId: item.id,
+      //     decrement: item.cartItemCount //the number to decrement the spaces by
+      //   };
+      // });
 
-      //Now we send a PUT request to update the spaces
-      fetch('http://localhost:3000/lessons/update-spaces', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(spaceUpdates),
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log('Spaces updated:', data);
-        })
-        .catch(error => {
-          console.error('Error updating spaces:', error);
-        });
+      // //Now we send a PUT request to update the spaces
+      // fetch('http://localhost:3000/lessons/update-spaces', {
+      //   method: 'PUT',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(spaceUpdates),
+      // })
+      //   .then(response => response.json())
+      //   .then(data => {
+      //     console.log('Spaces updated:', data);
+      //   })
+      //   .catch(error => {
+      //     console.error('Error updating spaces:', error);
+      //   });
 
     },
 
@@ -100,6 +103,8 @@ let webstore = new Vue({
       if (lesson.spaces > lesson.cartItemCount) { //if the spaces left of the lesson is more that whats in the cart
         lesson.cartItemCount++ //then we can add it (increment the cartItemCount value)
         this.cart.push(lesson.id); //literally adding/pushing the lesson ID in the cart array
+       
+        
       }
 
 
@@ -178,23 +183,12 @@ let webstore = new Vue({
         //this line searches for the same lesson added in the lessons array (after removing it) using the ID and it stores it in lessonInLessons
         if (lessonInLesson) {//if that lesson is in the array then decrease the cartItemCount which hence increases the spaces.
           lessonInLesson.cartItemCount--;
+         
         }
       }
     },
 
-    // submitForm() {//Triggered in the place order button only if the credentials are valid, it will alert this message
-    //   if(this.cart.length===0){
-    //     alert('Please add lessons to your cart to place an order.');
-    //   }else{
-    //   alert('Order Submitted. Thank you!');
-    //   }
-    // },
-
   },
-
-  // mounted() {
-  //   this.fetchLessons(); // Fetch lessons when the component is mounted
-  // },
 
   computed: {
     cartItems: function () { //this is a function that is making an array - cartItems of lesson objects

@@ -43,6 +43,9 @@ app.get('/lessons', (req, res) => { //defining the route on the server for a get
     });
 });
 
+
+
+
 //POST /orders endpoint
 app.post('/orders', (req, res) => { //this will extract the orderData (created in lessons.js) from the req.body
     const orderData = req.body; // Includes name, phoneNumber, and cart
@@ -58,24 +61,78 @@ app.post('/orders', (req, res) => { //this will extract the orderData (created i
     });
 });
 
-//PUT /lessons/update-spaces endpoint
-app.put('/lessons/update-spaces', (req, res) => {
-    const updates = req.body;
 
-    Promise.all(updates.map(update => {
-        return db.collection('lessons').updateOne(
-            { id: update.lessonId },
-            { $inc: { spaces: -update.decrement } }
-        );
-    }))
-    .then(result => {
-        res.json({ message: 'Spaces updated', result });
-    })
-    .catch(err => {
-        console.error(err);
-        res.status(500).send('Error updating spaces');
-    });
-});
+
+
+
+//PUT /lessons/update-spaces endpoint
+// app.put('/lessons/update-spaces', (req, res) => {
+//     const updates = req.body; // Expecting an array of updates
+
+//     // First, check if the updates are valid
+//     const validationPromises = updates.map(update => {
+//         return db.collection('lessons').findOne({ id: update.lessonId })
+//             .then(lesson => {
+//                 if (!lesson || lesson.spaces - update.decrement < 0) {
+//                     throw new Error(`Invalid update for lesson ID ${update.lessonId}`);
+//                 }
+//             });
+//     });
+
+//     Promise.all(validationPromises)
+//         .then(() => {
+//             // Perform the updates if all validations pass
+//             const updatePromises = updates.map(update => {
+//                 return db.collection('lessons').updateOne(
+//                     { id: update.lessonId },
+//                     { $inc: { spaces: -update.decrement } }
+//                 );
+//             });
+//             return Promise.all(updatePromises);
+//         })
+//         .then(result => {
+//             res.json({ message: 'Spaces updated', result });
+//         })
+//         .catch(err => {
+//             console.error(err);
+//             res.status(400).send('Error updating spaces: ' + err.message);
+//         });
+// });
+
+
+
+// app.put('/lessons/update-spaces', (req, res) => {
+//     const updates = req.body;
+
+//     Promise.all(updates.map(update => {
+//         return db.collection('lessons').updateOne(
+//             { id: update.lessonId },
+//             { $inc: { spaces: -update.decrement } }
+//         );
+//     }))
+//     .then(result => {
+//         res.json({ message: 'Spaces updated', result });
+//     })
+//     .catch(err => {
+//         console.error(err);
+//         res.status(500).send('Error updating spaces');
+//     });
+// });
+// app.put('/lessons/update-cart-item-count', (req, res) => {
+//     const { lessonId, cartItemCount } = req.body;
+//     db.collection('lessons').updateOne(
+//         { id: lessonId },
+//         { $set: { cartItemCount: cartItemCount } },
+//         (err, result) => {
+//             if (err) {
+//                 console.error(err);
+//                 res.status(500).send('Error updating cartItemCount');
+//             } else {
+//                 res.json({ message: 'cartItemCount updated', result });
+//             }
+//         }
+//     );
+// });
 
 
 
