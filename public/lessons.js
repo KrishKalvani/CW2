@@ -11,6 +11,7 @@ let webstore = new Vue({
 
     },
     lessons: [], //lessons array containing 10 lesson objects
+    lessonList: [], //search lesson list
     cart: [], //this is the cart array that stores the IDs of the lessons and will be used to display the lessons in the cart page dynamically
     sortOrder: 'ascending',//this will change to descending and back to ascending depending on the button clicked in the html page
   },
@@ -19,13 +20,27 @@ let webstore = new Vue({
   },
   methods: {
 
+    //this function is triggered when the user starts typing in the search bar.
+    searchLessons: function() {
+      fetch(`http://localhost:3000/search?q=${encodeURIComponent(this.searchValue.trim())}`)
+        .then(response => response.json()) //response from the server is parsed as JSON.
+        .then(data => { //search results updated in the lessonList
+          this.lessonList = data; //update lessonList with the search results
+        })
+        .catch(error => {
+          console.error('Error fetching search results:', error);
+        });
+    },
+
     fetchLessons: function () { //makes a get request to the server's /lessons route
       fetch('http://localhost:3000/lessons')
         .then(response => response.json()) //when this gets the response from the server, this will take the response and read it as JSON
         .then(data => { //then we update the lessons array
           this.lessons = data; //replace the empty lessons array with data fetched from server
+          this.lessonList = this.lessons;
         })
         .catch(error => console.error('Error fetching lessons:', error)); //error handling
+        
     },
 
 
@@ -43,14 +58,18 @@ let webstore = new Vue({
         cart: this.cartItems.reduce((acc, lesson) => {//accumulator and the current lesson being processed
           //each item in cart is an object with lesson details
           if (!acc[lesson.id]) { //checks if the lesson.id (key) is not added
-            acc[lesson.id] = { spaces: 0 }; //if the condition is true, then set this up
+            acc[lesson.id] = { spaces: 0 }; //if the condition is true, then add the lesson.id in the cart (set this up).
           }
-          acc[lesson.id].spaces += 1; //counts and increments how many times a particular lesson has been added in the cart.
+          acc[lesson.id].spaces += 1; //it increments if it reads the same id for n number of times. Counts and increments how many times a particular lesson has been added in the cart.
           return acc; //goes to the next iteration or returns the final acc when the process is complete.
         }, {})
       };
 
+      //the acc stores an object which has the lesson ID and maps that to the corresponding object which contains spaces details.
+
+
       //prepare the space updates
+      //here we transform the orderData's cart into an array of updates and each entry has lessonID and the amount to 'decrement' the spaces by
       const spaceUpdates = Object.entries(orderData.cart).map(([lessonId, { spaces }]) => {
         return {
           lessonId: lessonId,
@@ -58,7 +77,6 @@ let webstore = new Vue({
         };
       });
 
-      //the acc stores an object which has the lesson ID and maps that to the corresponding object which contains spaces details.
 
       //POST request to send the order data to the server
       fetch('http://localhost:3000/orders', { //sends a post request
@@ -79,7 +97,7 @@ let webstore = new Vue({
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(spaceUpdates),
+            body: JSON.stringify(spaceUpdates), //sending spaceUpdates to the server
           });
         })
         .then(response => response.json())
@@ -219,33 +237,6 @@ let webstore = new Vue({
     credentialsValidation: function () { //this checks if both are correct and then disabled if its not correct, from the html side
       return this.nameValidation && this.phoneValidation;
     },
-
-
-    // lessonList(){ //this searches the lesson by the subject
-    //   if(this.searchValue.trim().length>0){//if something is searched then searchValue is greater than 0
-    //     return this.lessons.filter((lesson)=>lesson.subject.toLowerCase().includes(this.searchValue.trim().toLowerCase()))
-    //   }//we filter the lesson for each lesson if the lessons subject includes the value we searched, then return it.
-
-    // lessonList(){ // i modified the previouse code to search by location as well
-    //   if(this.searchValue.trim().length>0){ //if the user searches something
-    //     return (this.lessons.filter((lesson)=>{// then return the following
-    //       let lowerCaseSearch= this.searchValue.trim().toLowerCase(); //this stores all the search values in lowerCase
-    //       let subjectSearch= lesson.subject.toLowerCase().includes(lowerCaseSearch);//searches by subject, we lowerCase the subject so we can get
-    //       //results for searching a small letter, we do the lowerCasing during the search (in the includes) so that we can search big letters, we just want to make it
-    //       //case insensitive
-    //       let locationSearch= lesson.location.toLowerCase().includes(lowerCaseSearch);
-    //       return subjectSearch||locationSearch;
-
-    //     }));
-
-
-    //   }
-    //   return this.lessons;//this displays all the lessons at default when nothing is searched
-
-    // }
-    //reference for the searching: https://www.youtube.com/watch?v=0TMy-5srdlA&list=LL&index=1&t=818s
-
-
   },
 });
 
