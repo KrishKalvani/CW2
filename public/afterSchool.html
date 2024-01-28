@@ -14,7 +14,7 @@
        
         <a href="afterSchool.html"><img id="logo" src="/images/cw1logo.png"></a><!--website logo-->
         <p style="position: absolute;margin-top: -110px;margin-left: 40%; color: white; font-family: Arial, Helvetica, sans-serif;">Search:</p>
-        <input id="searchInput" v-model="searchValue" type="text" placeholder="Search lessons..."><!--search input, searchVal is tracked here-->
+        <input id="searchInput" v-model="searchValue" v-on:input="searchLessons" type="text" placeholder="Search lessons..."><!--search input, searchVal is tracked here-->
         <!--change made here-->
       </div>
       <h3 id="welcomeText">Welcome! Buy any lesson you want and pursue your studies <em>AfterSchool</em></h3><!--welcome message-->
@@ -47,17 +47,14 @@
       </button>
         
       </header>
-
-      <!--<div v-if="lessons.length">--><!--if searchVal isn't containing any exisitng lesson-->
-        <!-- <div v-for="(lesson, index) in lessonList" :key="index">
-          {{ index + 1}}. {{lesson.subject}}..{{lesson.location}}
-        </div> -->
-        <!-- </div> -->
-        <!--<div id="NoLessonFoundText" v-else>No lesson found for: {{searchValue}}</div>--><!--else, then no lesson found-->
      
+        <div id="NoLessonFoundText" v-if="lessonList.length === 0">
+          No lesson found for: {{ searchValue }}
+        </div>
+
       <div v-if="showLesson" id="lessonsGrid"><!--v-if to display between lessons and checkout-->
         <!--a whole lesson-->
-        <div id="lessonCard" v-for="lesson in lessons" :key="lesson.id"><!--lessonCard for CSS, v-for to iterate over the lessons array (now lessons list array) to display the lessons-->
+        <div id="lessonCard" v-for="lesson in lessonList" :key="lesson.id"><!--lessonCard for CSS, v-for to iterate over the lessons array (now lessons list array) to display the lessons-->
           <figure>
             <img id="lessonPic" v-bind:src="lesson.image"><!--lesson image-->
           </figure>
