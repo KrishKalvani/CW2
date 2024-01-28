@@ -27,8 +27,8 @@ let webstore = new Vue({
         })
         .catch(error => console.error('Error fetching lessons:', error)); //error handling
     },
-    
-    
+
+
     submitOrder: function () {
       if (this.cart.length === 0) { //checks if cart length is 0, if so, then make sure user adds something to the cart
         alert('Please add lessons to your cart to place an order.');
@@ -50,9 +50,17 @@ let webstore = new Vue({
         }, {})
       };
 
+      //prepare the space updates
+      const spaceUpdates = Object.entries(orderData.cart).map(([lessonId, { spaces }]) => {
+        return {
+          lessonId: lessonId,
+          decrement: spaces
+        };
+      });
+
       //the acc stores an object which has the lesson ID and maps that to the corresponding object which contains spaces details.
 
-      //send the order data to the server
+      //POST request to send the order data to the server
       fetch('http://localhost:3000/orders', { //sends a post request
         method: 'POST', //specifying http request
         headers: { //telling the server that the body of the request is JSON
@@ -64,37 +72,25 @@ let webstore = new Vue({
         .then(data => { //logs the result to the console
           console.log('Order submitted:', data);
           alert('Order Submitted. Thank you!');
-          this.cart = []; //this.cart is my cart array
-          // this.cartItemCount = 0;
+
+        //PUT request to update spaces
+          return fetch('http://localhost:3000/lessons/update-spaces', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(spaceUpdates),
+          });
+        })
+        .then(response => response.json())
+        .then(updateData => {
+          console.log("Spaces updated:", updateData);
+          this.cart = []; //this.cart is my cart array, we clear it after everything is done.
         })
         .catch(error => { //error handling
           console.error('Error submitting order:', error);
           alert('Error submitting order. Please try again.');
         });
-
-      // //updating the lesson spaces with PUT
-      // const spaceUpdates = this.cartItems.map(item => {
-      //   return {
-      //     lessonId: item.id,
-      //     decrement: item.cartItemCount //the number to decrement the spaces by
-      //   };
-      // });
-
-      // //Now we send a PUT request to update the spaces
-      // fetch('http://localhost:3000/lessons/update-spaces', {
-      //   method: 'PUT',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(spaceUpdates),
-      // })
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     console.log('Spaces updated:', data);
-      //   })
-      //   .catch(error => {
-      //     console.error('Error updating spaces:', error);
-      //   });
 
     },
 
@@ -103,8 +99,8 @@ let webstore = new Vue({
       if (lesson.spaces > lesson.cartItemCount) { //if the spaces left of the lesson is more that whats in the cart
         lesson.cartItemCount++ //then we can add it (increment the cartItemCount value)
         this.cart.push(lesson.id); //literally adding/pushing the lesson ID in the cart array
-       
-        
+
+
       }
 
 
@@ -183,7 +179,7 @@ let webstore = new Vue({
         //this line searches for the same lesson added in the lessons array (after removing it) using the ID and it stores it in lessonInLessons
         if (lessonInLesson) {//if that lesson is in the array then decrease the cartItemCount which hence increases the spaces.
           lessonInLesson.cartItemCount--;
-         
+
         }
       }
     },
