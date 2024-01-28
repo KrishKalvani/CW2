@@ -2,8 +2,8 @@ const express = require('express');
 const app = express();
 
 app.use((req, res, next) => { //logger middleware, used for debugging
-    const now = new Date();
-    console.log(`${now.toLocaleString()} - ${req.method} Request to ${req.url}`);
+    const now = new Date(); //storing the current date in the now variable
+    console.log(`${now.toLocaleString()} - ${req.method} Request to ${req.url}`); //logging the date/time in a readable format along with request methof and the queried url.
     next();
 });
 
@@ -46,7 +46,7 @@ app.get('/lessons', (req, res) => { //defining the route on the server for a get
 
 
 
-//POST /orders endpoint
+//POST /orders endpoint. We receive the order from the fetch in lessons.js and we put it in the order collection.
 app.post('/orders', (req, res) => { //this will extract the orderData (created in lessons.js) from the req.body
     const orderData = req.body; // Includes name, phoneNumber, and cart
 
@@ -64,10 +64,12 @@ app.post('/orders', (req, res) => { //this will extract the orderData (created i
 
 
 
-//PUT  
+//we receive the spaceUpdates array over here and we update it with PUT
 app.put('/lessons/update-spaces', (req, res) => {
     const updates = req.body;
   
+    //The server processes each update using Promise.all() to ensure all updates are completed. 
+    //If successful, it responds with a message indicating the spaces were updated.
     Promise.all(updates.map(update => {
       return db.collection('lessons').updateOne(
         { id: update.lessonId },
@@ -82,6 +84,31 @@ app.put('/lessons/update-spaces', (req, res) => {
       res.status(500).send('Error updating spaces');
     });
   });
+
+  //searching - define a GET route
+  app.get('/search', (req, res) => {
+    const searchQuery = req.query.q || ''; //extracting a search query
+    
+    //here we query the mongoDB searching in the lessons collection
+    db.collection('lessons').find({ 
+      $or: [ //this 'or' performs a logical OR operation to match the documents to search by either subject or location.
+
+      //searches for lessons where the subject field matches the searchQuery. 'i' is regex for case insensitivity
+        { subject: new RegExp(searchQuery, 'i') }, //case-insensitive regex search on the subject
+        { location: new RegExp(searchQuery, 'i') }, //case-insensitive regex search on the location
+      ]
+    }).toArray((err, results) => { //converts the query results to an array
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error performing search.");
+        return;
+      }
+      res.json(results); // Send back the search results as JSON
+    });
+  });
+  
+
+
   
 
 
@@ -122,40 +149,6 @@ app.put('/lessons/update-spaces', (req, res) => {
 //         });
 // });
 
-
-
-// app.put('/lessons/update-spaces', (req, res) => {
-//     const updates = req.body;
-
-//     Promise.all(updates.map(update => {
-//         return db.collection('lessons').updateOne(
-//             { id: update.lessonId },
-//             { $inc: { spaces: -update.decrement } }
-//         );
-//     }))
-//     .then(result => {
-//         res.json({ message: 'Spaces updated', result });
-//     })
-//     .catch(err => {
-//         console.error(err);
-//         res.status(500).send('Error updating spaces');
-//     });
-// });
-// app.put('/lessons/update-cart-item-count', (req, res) => {
-//     const { lessonId, cartItemCount } = req.body;
-//     db.collection('lessons').updateOne(
-//         { id: lessonId },
-//         { $set: { cartItemCount: cartItemCount } },
-//         (err, result) => {
-//             if (err) {
-//                 console.error(err);
-//                 res.status(500).send('Error updating cartItemCount');
-//             } else {
-//                 res.json({ message: 'cartItemCount updated', result });
-//             }
-//         }
-//     );
-// });
 
 
 
