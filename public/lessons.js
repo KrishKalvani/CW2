@@ -79,7 +79,7 @@ let webstore = new Vue({
 
 
       //POST request to send the order data to the server
-      fetch('http://localhost:3000/orders', { //sends a post request
+      fetch('http://afterschool-env.eba-y6kg2j38.eu-west-2.elasticbeanstalk.com/orders', { //sends a post request
         method: 'POST', //specifying http request
         headers: { //telling the server that the body of the request is JSON
           'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ let webstore = new Vue({
           alert('Order Submitted. Thank you!');
 
         //PUT request to update spaces
-          return fetch('http://localhost:3000/lessons/update-spaces', {
+          return fetch('http://afterschool-env.eba-y6kg2j38.eu-west-2.elasticbeanstalk.com/lessons/update-spaces', {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
