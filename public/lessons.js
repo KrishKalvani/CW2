@@ -33,7 +33,7 @@ let webstore = new Vue({
     },
 
     fetchLessons: function () { //makes a get request to the server's /lessons route
-      fetch('http://localhost:3000/lessons')
+      fetch('http://afterschool-env.eba-y6kg2j38.eu-west-2.elasticbeanstalk.com/lessons')
         .then(response => response.json()) //when this gets the response from the server, this will take the response and read it as JSON
         .then(data => { //then we update the lessons array
           this.lessons = data; //replace the empty lessons array with data fetched from server
