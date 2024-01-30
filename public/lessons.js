@@ -22,7 +22,7 @@ let webstore = new Vue({
 
     //this function is triggered when the user starts typing in the search bar.
     searchLessons: function() {
-      fetch(`http://localhost:3000/search?q=${encodeURIComponent(this.searchValue.trim())}`)
+      fetch(`http://afterschool-env.eba-y6kg2j38.eu-west-2.elasticbeanstalk.com/search?q=${encodeURIComponent(this.searchValue.trim())}`)
         .then(response => response.json()) //response from the server is parsed as JSON.
         .then(data => { //search results updated in the lessonList
           this.lessonList = data; //update lessonList with the search results
