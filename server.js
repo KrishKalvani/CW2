@@ -85,7 +85,7 @@ app.post('/orders', (req, res) => { //this will extract the orderData (created i
 //     });
 //   });
 
-  app.put('/lessons/update-spaces', (req, res) => {
+  app.put('/lessons/update-spaces', (req, res) => { //doing validation here to make sure when testing with postman, the spaces don't go below 0
     const updates = req.body;
 
     //create a sequence of promises for each update operation
@@ -143,49 +143,6 @@ app.post('/orders', (req, res) => { //this will extract the orderData (created i
       res.json(results); // Send back the search results as JSON
     });
   });
-  
-
-
-  
-
-
-
-
-
-//PUT /lessons/update-spaces endpoint
-// app.put('/lessons/update-spaces', (req, res) => {
-//     const updates = req.body; // Expecting an array of updates
-
-//     // First, check if the updates are valid
-//     const validationPromises = updates.map(update => {
-//         return db.collection('lessons').findOne({ id: update.lessonId })
-//             .then(lesson => {
-//                 if (!lesson || lesson.spaces - update.decrement < 0) {
-//                     throw new Error(`Invalid update for lesson ID ${update.lessonId}`);
-//                 }
-//             });
-//     });
-
-//     Promise.all(validationPromises)
-//         .then(() => {
-//             // Perform the updates if all validations pass
-//             const updatePromises = updates.map(update => {
-//                 return db.collection('lessons').updateOne(
-//                     { id: update.lessonId },
-//                     { $inc: { spaces: -update.decrement } }
-//                 );
-//             });
-//             return Promise.all(updatePromises);
-//         })
-//         .then(result => {
-//             res.json({ message: 'Spaces updated', result });
-//         })
-//         .catch(err => {
-//             console.error(err);
-//             res.status(400).send('Error updating spaces: ' + err.message);
-//         });
-// });
-
 
 
 
