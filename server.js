@@ -65,25 +65,62 @@ app.post('/orders', (req, res) => { //this will extract the orderData (created i
 
 
 //we receive the spaceUpdates array over here and we update it with PUT
-app.put('/lessons/update-spaces', (req, res) => {
-    const updates = req.body;
+// app.put('/lessons/update-spaces', (req, res) => {
+//     const updates = req.body;
   
-    //The server processes each update using Promise.all() to ensure all updates are completed. 
-    //If successful, it responds with a message indicating the spaces were updated.
-    Promise.all(updates.map(update => {
-      return db.collection('lessons').updateOne(
-        { id: update.lessonId },
-        { $inc: { spaces: -update.decrement } }
-      );
-    }))
-    .then(result => {
-      res.json({ message: 'Spaces updated', result });
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).send('Error updating spaces');
+//     //The server processes each update using Promise.all() to ensure all updates are completed. 
+//     //If successful, it responds with a message indicating the spaces were updated.
+//     Promise.all(updates.map(update => {
+//       return db.collection('lessons').updateOne(
+//         { id: update.lessonId },
+//         { $inc: { spaces: -update.decrement } }
+//       );
+//     }))
+//     .then(result => {
+//       res.json({ message: 'Spaces updated', result });
+//     })
+//     .catch(err => {
+//       console.error(err);
+//       res.status(500).send('Error updating spaces');
+//     });
+//   });
+
+  app.put('/lessons/update-spaces', (req, res) => {
+    const updates = req.body;
+
+    //create a sequence of promises for each update operation
+    const updatePromises = updates.map(update => {
+        //find the lesson to check current spaces
+        return db.collection('lessons').findOne({ id: update.lessonId }).then(lesson => {
+            if (!lesson) {
+                throw new Error(`Lesson with ID ${update.lessonId} not found.`);
+            }
+            //check if the operation will result in negative spaces
+            if (lesson.spaces - update.decrement < 0) {
+                throw new Error(`Spaces for lesson ID ${update.lessonId} can't go below 0.`);
+            }
+            //if the check passes, proceed to update the lesson spaces
+            return db.collection('lessons').updateOne(
+                { id: update.lessonId },
+                { $inc: { spaces: -update.decrement } }
+            );
+        });
     });
-  });
+
+    Promise.all(updatePromises)
+        .then(() => res.json({ message: 'Spaces updated successfully' }))
+        .catch(err => {
+            console.error(err);
+            //send the custom error message if spaces go below 0
+            res.status(400).send(err.message);
+        });
+});
+
+
+
+  
+
+
 
   //searching - define a GET route
   app.get('/search', (req, res) => {
