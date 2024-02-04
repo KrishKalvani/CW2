@@ -21,6 +21,7 @@ let webstore = new Vue({
   methods: {
 
     //this function is triggered when the user starts typing in the search bar.
+    //reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
     searchLessons: function() {
       fetch(`http://afterschool-env.eba-y6kg2j38.eu-west-2.elasticbeanstalk.com/search?q=${encodeURIComponent(this.searchValue.trim())}`)
         .then(response => response.json()) //response from the server is parsed as JSON.

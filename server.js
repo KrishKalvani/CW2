@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require('express'); //using npm install express to use that as our server
 const app = express();
 
-app.use((req, res, next) => { //logger middleware, used for debugging
+app.use((req, res, next) => { //logger middleware, used for debugging, we will see this in the aws pipeline website, we can download the logs there.
     const now = new Date(); //storing the current date in the now variable
     console.log(`${now.toLocaleString()} - ${req.method} Request to ${req.url}`); //logging the date/time in a readable format along with request methof and the queried url.
     next();
@@ -18,10 +18,11 @@ app.use((req,res,next)=>{ //used for the CORS error
     next();
 })
 
+//used npm install mongodb to get the connection
 const MongoClient = require('mongodb').MongoClient;
 
 
-// Connect to MongoDB
+//connect to MongoDB
 let db;
 MongoClient.connect('mongodb+srv://krishKal:lionking@cluster0.hykpngx.mongodb.net', (err, client) => {
     db = client.db('afterSchool');
@@ -140,9 +141,12 @@ app.post('/orders', (req, res) => { //this will extract the orderData (created i
         res.status(500).send("Error performing search.");
         return;
       }
-      res.json(results); // Send back the search results as JSON
+      res.json(results); //send back the search results as JSON
     });
   });
+
+  //references for searching: https://www.mongodb.com/docs/manual/tutorial/query-arrays/
+  //https://www.mongodb.com/docs/manual/reference/method/db.collection.find/
 
 
 
@@ -150,5 +154,5 @@ app.post('/orders', (req, res) => { //this will extract the orderData (created i
 // Start the server
 const port = process.env.PORT || 3000
 app.listen(port, () => {
-    console.log('Server is running on http://localhost:3000');
+    console.log('Server is running on http://localhost:3000, not anymore, its now hosted on AWS');
 });
