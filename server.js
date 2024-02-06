@@ -44,6 +44,12 @@ app.get('/lessons', (req, res) => { //defining the route on the server for a get
     });
 });
 
+app.get('/orders', (req, res) => { //defining the route on the server for a get request on /orders
+    db.collection('orders').find({}).toArray((err, results) => { //querying the DB for all the documents in the lessons collection
+        if (err) throw err;
+        res.json(results); //send results to client as JSON data
+    });
+});
 
 
 
