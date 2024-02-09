@@ -7,14 +7,14 @@ app.use((req, res, next) => { //logger middleware, used for debugging, we will s
     next();
 });
 
-app.use(express.json())
+app.use(express.json()) //This tells the Express app to use middleware that automatically parses JSON formatted request bodies. This is necessary for routes that accept JSON data in the body of the request, allowing you to access this data via req.body.
 app.set('port', 3000)
 app.use((req,res,next)=>{ //used for the CORS error
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader("Access-Control-Allow-Origin-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Origin-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Allows all domains to access the server 
+    res.setHeader("Access-Control-Allow-Origin-Credentials", "true"); //used to tell browsers to expose the response to front-end JavaScript code when credentials are included in requests.
+    res.setHeader("Access-Control-Allow-Origin-Methods", "GET,HEAD,OPTIONS,POST,PUT"); //lists the HTTP methods allowed when accessing the resource
     res.setHeader("Access-Control-Allow-Origin-Headers", "Access-Control-Allow-Origin-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-
+    //specifies the headers that can be used when making the actual request
     next();
 })
 
