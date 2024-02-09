@@ -109,7 +109,7 @@ app.post('/orders', (req, res) => { //this will extract the orderData (created i
             //if the check passes, proceed to update the lesson spaces
             return db.collection('lessons').updateOne(
                 { id: update.lessonId },
-                { $inc: { spaces: -update.decrement } }
+                { $inc: { spaces: -update.decrement } } // minus (-) used to decrement
             );
         });
     });
